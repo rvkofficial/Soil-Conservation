@@ -1,0 +1,66 @@
+<style>
+    .geo-calc-box {
+        font-family: -apple-system, sans-serif;
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fcfbf9;
+        border: 2px solid #5c4033;
+        border-radius: 8px;
+        color: #333;
+    }
+    .geo-title { text-align: center; border-bottom: 2px solid #5c4033; padding-bottom: 10px; margin: 0 0 20px 0; color: #5c4033; font-size: 18px; }
+    .geo-row { margin-bottom: 12px; }
+    .geo-row label { display: block; font-size: 13px; font-weight: bold; color: #5c4033; margin-bottom: 4px; }
+    .geo-row input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    .geo-btn { width: 100%; background-color: #5c4033; color: white; border: none; padding: 10px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+    .geo-btn:hover { background-color: #3d2b22; }
+    .geo-results { margin-top: 20px; background-color: #f1ede9; padding: 15px; border-radius: 4px; border-left: 4px solid #5c4033; }
+    .geo-val { font-family: monospace; font-weight: bold; color: #111; }
+</style>
+
+<div class="geo-calc-box">
+    <h3 class="geo-title">🏗️ Terzaghi Bearing Capacity Calculator</h3>
+    <div class="geo-row">
+        <label>Soil Cohesion (c) — kN/m²</label>
+        <input type="number" id="ter-c" value="20" step="any">
+    </div>
+    <div class="geo-row">
+        <label>Surcharge Pressure (q = γ × Df) — kN/m²</label>
+        <input type="number" id="ter-q" value="15" step="any">
+    </div>
+    <div class="geo-row">
+        <label>Unit Weight of Soil (γ) — kN/m³</label>
+        <input type="number" id="ter-gamma" value="18" step="any">
+    </div>
+    <div class="geo-row">
+        <label>Footing Width (B) — meters</label>
+        <input type="number" id="ter-b" value="1.5" step="any">
+    </div>
+    <div class="geo-row">
+        <label>Capacity Factors (Nc, Nq, Nγ) separated by commas</label>
+        <input type="text" id="ter-factors" value="17.7, 10.7, 10.8">
+    </div>
+    <button type="button" class="geo-btn" onclick="runTerzaghi()">Calculate Capacity</button>
+    <div class="geo-results">
+        <div style="font-size: 15px;">Ultimate Capacity (q_ult) = <span id="res-qult" class="geo-val">539.30</span> kN/m²</div>
+    </div>
+</div>
+
+<script>
+function runTerzaghi() {
+    var c = parseFloat(document.getElementById('ter-c').value) || 0;
+    var q = parseFloat(document.getElementById('ter-q').value) || 0;
+    var gamma = parseFloat(document.getElementById('ter-gamma').value) || 0;
+    var b = parseFloat(document.getElementById('ter-b').value) || 0;
+    var factors = document.getElementById('ter-factors').value.split(',');
+    
+    if(factors.length !== 3) { alert("Please enter exactly three factor values separated by commas (Nc, Nq, Ny)"); return; }
+    var nc = parseFloat(factors[0]) || 0;
+    var nq = parseFloat(factors[1]) || 0;
+    var ny = parseFloat(factors[2]) || 0;
+
+    var qult = (c * nc) + (q * nq) + (0.5 * gamma * b * ny);
+    document.getElementById('res-qult').innerText = qult.toFixed(2);
+}
+</script>
